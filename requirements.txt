@@ -1,4 +1,2 @@
 mysql
-sqlite3
-requests
 telepot
