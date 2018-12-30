@@ -22,6 +22,12 @@ from telepot.namedtuple import InlineQueryResultPhoto
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 import xml.etree.ElementTree as ET
 
+#Define DB type
+class DatabaseType(enum.Enum):
+	LOCALDB = 1
+	MYSQL = 2
+	POSTGRESQL = 3
+
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
 
@@ -128,11 +134,11 @@ class Variable():
 			cursor.execute("SELECT value FROM variables WHERE name='{}' AND userid={}".format(self.name, usrid))
 			data = cursor.fetchone()
 			if not data is None:			
-				query = ("UPDATE variables SET value = ? WHERE name = ? AND userid = ?")
+				query = reformQuery("UPDATE variables SET value = %s WHERE name = %s AND userid = %s")
 				cursor.execute(query, (value, self.name, usrid))
 				cnx.commit()
 			else:
-				query = ("INSERT INTO variables (userid, name, value) VALUES (?, ?, ?)")
+				query = reformQuery("INSERT INTO variables (userid, name, value) VALUES (%s, %s, %s)")
 				cursor.execute(query, (usrid, self.name, str(value)))
 				cnx.commit()
 			self.value = value
@@ -225,9 +231,15 @@ class UserTracker(telepot.aio.Bot):
 
 class Global:
 	defaultVariableContext = MyList([])
+	DbType = DatabaseType.POSTGRESQL
+
+def reformQuery(query):
+	if(Global.DbType == DatabaseType.LOCALDB):
+		return query.replace("%s", "?").replace("%d", "?").replace("%i", "?")
+	return query.replace("`", "")
 
 def generateTable(hash):
-	query = ("CREATE TABLE IF NOT EXISTS `variables` (`userid` INT NOT NULL, `name` VARCHAR(200) NOT NULL, `value` TEXT, PRIMARY KEY(userid,name));")
+	query = reformQuery("CREATE TABLE IF NOT EXISTS `variables` (`userid` INT NOT NULL, `name` VARCHAR(200) NOT NULL, `value` TEXT, PRIMARY KEY(userid,name));")
 	cursor.execute(query)
 	cnx.commit()
 
@@ -242,13 +254,21 @@ def generateTable(hash):
 
 TOKEN = '174152039:AAFAeOHYO07KWdMm3yz3nWHaYAZm_ZlAWMA'
 
-print('Version of the bot: 2.1')
-print('Opening connection to LocalDB ...')
+print('Version of the bot: 2.2')
+if(Global.DbType == DatabaseType.LOCALDB):
+	print('Opening connection to LocalDB ...')
+elif(Global.DbType == DatabaseType.MYSQL):
+	print('Opening connection to MYSQL ...')
+else:
+	print('Opening connection to POSTGRESQL ...')
 
 global data, events, cursor, cnx
-#cnx = mysql.connector.connect(user='root', password='', host='127.0.0.1', database='snowleopard')
-#cnx = sqlite3.connect('local.db')
-cnx = psycopg2.connect( host='ec2-54-225-150-216.compute-1.amazonaws.com', user='eriwbvlfdnqwgx', password='0b52612d34cf15404fcc4ca5750f18ddf0e2fa7b8be6aba43fb352de7f950575', dbname='d9905fj1co10al' )
+if(Global.DbType == DatabaseType.LOCALDB):
+	cnx = sqlite3.connect('local.db')
+elif(Global.DbType == DatabaseType.MYSQL):
+	cnx = mysql.connector.connect( host='ec2-54-225-150-216.compute-1.amazonaws.com', user='eriwbvlfdnqwgx', password='0b52612d34cf15404fcc4ca5750f18ddf0e2fa7b8be6aba43fb352de7f950575', database='d9905fj1co10al')
+else:
+	cnx = psycopg2.connect( host='ec2-54-225-150-216.compute-1.amazonaws.com', user='eriwbvlfdnqwgx', password='0b52612d34cf15404fcc4ca5750f18ddf0e2fa7b8be6aba43fb352de7f950575', dbname='d9905fj1co10al' )
 cursor = cnx.cursor()
 
 print('Checking database ...')
