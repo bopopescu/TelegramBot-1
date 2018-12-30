@@ -1,2 +1,2 @@
-mysql==2.0.4
-telepot
+./mysql-connector-python-2.0.4
+./telepot-master
