@@ -16,6 +16,7 @@ import re
 import collections
 import enum
 import ast
+import psycopg2
 from telepot.namedtuple import InlineQueryResultArticle, InputTextMessageContent
 from telepot.namedtuple import InlineQueryResultPhoto
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
@@ -246,7 +247,8 @@ print('Opening connection to LocalDB ...')
 
 global data, events, cursor, cnx
 #cnx = mysql.connector.connect(user='root', password='', host='127.0.0.1', database='snowleopard')
-cnx = sqlite3.connect('local.db')
+#cnx = sqlite3.connect('local.db')
+cnx = psycopg2.connect( host='ec2-54-225-150-216.compute-1.amazonaws.com', user='eriwbvlfdnqwgx', password='0b52612d34cf15404fcc4ca5750f18ddf0e2fa7b8be6aba43fb352de7f950575', dbname='d9905fj1co10al' )
 cursor = cnx.cursor()
 
 print('Checking database ...')
