@@ -1,2 +1,2 @@
-heroku ps:scale console=1
+heroku ps:scale release=1
 pause

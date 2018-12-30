@@ -1,2 +1,2 @@
-heroku ps:stop console
+heroku ps:stop release
 pause

@@ -1,1 +1,1 @@
-console: python bot.py
+release: python bot.py
