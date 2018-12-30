@@ -1,0 +1,1 @@
+console: python bot.py
