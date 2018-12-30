@@ -1,2 +1,2 @@
-mysql
+mysql==2.0.4
 telepot
