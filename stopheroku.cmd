@@ -1,2 +1,2 @@
-heroku ps:stop release
+heroku ps:stop worker
 pause
