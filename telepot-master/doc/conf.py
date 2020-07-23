@@ -16,7 +16,7 @@ extensions = [
 templates_path = ['_templates']
 
 source_suffix = '.rst'
-master_doc = 'index'
+main_doc = 'index'
 
 project = u'telepot'
 year = datetime.now().year
@@ -122,7 +122,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'telepot.tex', u'telepot Documentation',
+    (main_doc, 'telepot.tex', u'telepot Documentation',
      u'Nick Lee', 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'telepot', u'telepot Documentation',
+    (main_doc, 'telepot', u'telepot Documentation',
      [author], 1)
 ]
 
@@ -166,7 +166,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'telepot', u'telepot Documentation',
+    (main_doc, 'telepot', u'telepot Documentation',
      author, 'telepot', 'One line description of project.',
      'Miscellaneous'),
 ]
